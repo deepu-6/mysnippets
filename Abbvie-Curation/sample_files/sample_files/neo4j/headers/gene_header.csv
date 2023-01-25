@@ -1,0 +1,1 @@
+type,ontology,concept_id:ID,entity_name,class,:LABEL,approved_name,gene_type,entrez_id,uniprot_ids,ensembl_id,opentargets_link,mgd_ids,reactome_ids,synonyms,run_date

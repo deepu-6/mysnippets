@@ -1,0 +1,395 @@
+test()::=<<
+test template
+>>
+
+get_metadata(tables_list, batch_id)::=<<
+WITH clinical_batch_study_datasets AS (
+SELECT batch_id,
+       table_id,
+       foundation_table as table_name,
+       studyid,
+       source,
+       dataset_name,
+       dataset_type,
+       reporting_effort,
+       version
+FROM clinical_prep.clinical_batch_study_datasets
+WHERE studyid IN (SELECT studyid
+     FROM clinical_prep.clinical_batch_studies
+     WHERE 1=1
+     AND batch_id = $batch_id$
+     AND status = 'In Progress' )
+and active = 'True'
+AND batch_id = $batch_id$
+$if(tables_list)$
+AND foundation_table IN ($tables_list:{table_name | '$table_name$'};separator=","$)
+$endif$
+)
+
+
+SELECT x.table_id AS clinical_trl_fileid,
+       y.batch_id,
+       y.table_name,
+       y.studyid,
+       lower(y.dataset_type) AS dataset_type,
+       y.dataset_name,
+       y.dataset_name AS dataset_rename,
+       lower(x.column_name) AS var_name,
+       x.data_type AS hive_dtype,
+       x.is_null,
+       x.profile_dtype,
+       x.row_count
+FROM clinical_prep.unify_lsc_column_metadata x
+INNER JOIN clinical_batch_study_datasets y ON x.table_id = y.table_id
+AND x.table_id IN
+  (SELECT table_id
+   FROM clinical_batch_study_datasets)
+AND x.column_name NOT IN ('INGEST_TS_UTC',
+                          'RDIP_DATA_INGESTION_PARTITION',
+                          'RDIP_ALSC_PARTITION')
+UNION ALL
+SELECT x.clinical_trl_fileid,
+       y.clinical_trl_batchid AS batch_id,
+       y.table_name AS TABLE_NAME,
+       y.studyid,
+       lower(y.dataset_type) AS dataset_type,
+       y.dataset_name,
+       y.dataset_rename,
+       lower(x.variable) AS var_name,
+       x.hive_dtype,
+       x.is_null,
+       x.profile_dtype,
+       y.row_count
+FROM cqa_bots.t_manual_ingest_dataset_columns x
+INNER JOIN cqa_bots.t_manual_ingest_dataset_source_file y ON x.clinical_trl_fileid = y.clinical_trl_fileid
+AND x.clinical_trl_fileid IN
+  (SELECT table_id
+   FROM clinical_batch_study_datasets)
+AND y.clinical_trl_fileid IN
+  (SELECT table_id
+   FROM clinical_batch_study_datasets)
+>>
+
+get_spectre_mappings()::=<<
+SELECT DISTINCT lower(regexp_replace(studyid,'/', '_')) AS studyid,
+                lower(dataset_name) AS dataset_name,
+                upper(spectre_dataset_names) AS spectre_dataset_name
+FROM clntrl_reference_use.t_project_ops_clinical_input_consolidated_profiling_summary
+WHERE dataset_name IS NOT NULL
+>>
+
+get_sdtm_configuration()::=<<
+SELECT lower(dom_name) AS dataset_name,
+       lower(var_name_input) AS var_name,
+       var_dtype,
+       var_order,
+       ns_config_var_type
+FROM clntrl_reference_use.t_project_ops_sdtm_domain_configuration
+WHERE ns_config_var_type IN ('Core',
+                             'SC Core',
+                             'NS Metadata')
+AND dom_name_input IS NOT NULL
+AND var_name_input IS NOT NULL
+AND var_dtype IS NOT NULL
+>>
+
+get_si_ar_configuration()::=<<
+SELECT lower(dataset_name) AS dataset_name,
+       lower(var_name) AS var_name,
+       var_dtype,
+       var_order,
+       var_role
+FROM clntrl_reference_use.t_project_ops_clinical_input_dataset_table_configuration
+WHERE dataset_name IS NOT NULL
+AND var_name IS NOT NULL
+AND var_dtype IS NOT NULL
+>>
+
+get_mappings()::=<<
+SELECT lower(coalesce(studyid,"default")) AS studyid,
+       lower(dataset_name) AS dataset_name,
+       mapped_dataset AS mapped_dataset,
+       lower(dataset_type) AS dataset_type
+FROM clntrl_reference_use.t_project_ops_clinical_input_dataset_name_mapping
+>>
+
+
+get_staging_tablename(mapped_dataset, dataset_type, process_config)::=<<
+$process_config.staging_db$.$process_config.staging_tablename_prefix$$dataset_type$_$mapped_dataset$$process_config.staging_tablename_suffix$
+>>
+
+get_unified_tablename(mapped_dataset, dataset_type, process_config)::=<<
+$process_config.unified_db$.$process_config.unified_tablename_prefix$$dataset_type$_$mapped_dataset$$process_config.unified_tablename_suffix$
+>>
+
+get_prev_unified_tablename(mapped_dataset, dataset_type, process_config)::=<<
+$process_config.previous_unified_db$.$process_config.previous_unified_tablename_prefix$$dataset_type$_$mapped_dataset$$process_config.previous_unified_tablename_suffix$
+>>
+
+drop_table(table_name)::=<<
+drop table $table_name$
+>>
+
+create_staging_table(columns_types_map, table_name)::=<<
+create table $table_name$ ($columns_types_map.keys:{column_name|`$column_name$` $columns_types_map.(column_name)$};separator="\n, "$)
+row format delimited fields terminated by '\u0001'
+lines terminated by '\n'
+stored as textfile
+tblproperties ('serialization.null.format'='\u0002')
+>>
+
+get_ns_row_id_index(tables_list, batch_id)::=<<
+WITH clinical_batch_study_datasets AS(
+SELECT batch_id,
+       table_id,
+       foundation_table AS TABLE_NAME,
+       studyid,
+       dataset_type,
+       dataset_name,
+       VERSION
+FROM clinical_prep.clinical_batch_study_datasets
+WHERE 1=1
+AND batch_id = $batch_id$
+AND foundation_table IN ($tables_list:{table_name | '$table_name$'};separator=","$)
+)
+,sas_table_metadata AS(
+SELECT clinical_trl_fileid,
+       clinical_trl_batchid,
+       TABLE_NAME,
+       lower(studyid) AS studyid,
+       lower(dataset_type) AS dataset_type,
+       lower(dataset_name) AS dataset_name,
+       lower(dataset_rename) AS dataset_rename,
+       ROW_COUNT
+FROM cqa_bots.t_manual_ingest_dataset_source_file
+WHERE 1=1
+AND clinical_trl_fileid IN
+    (SELECT table_id
+     FROM clinical_batch_study_datasets)
+)
+,alsc_table_metadata AS(
+SELECT x.table_id AS clinical_trl_fileid,
+       x.batch_id AS clinical_trl_batchid,
+       y.table_name,
+       y.tablespace_name,
+       lower(x.studyid) AS studyid,
+       lower(x.dataset_type) AS dataset_type,
+       lower(x.dataset_name) AS dataset_name,
+       lower(x.dataset_name) AS dataset_rename,
+       ROW_COUNT,
+       x.version
+FROM clinical_batch_study_datasets x
+INNER JOIN
+  (SELECT DISTINCT table_id,
+                   TABLE_NAME,
+                    tablespace_name,
+                   ROW_COUNT
+   FROM clinical_prep.unify_lsc_column_metadata) y
+ON x.table_id = y.table_id
+)
+
+SELECT TABLE_NAME,
+       lower(studyid) AS studyid,
+       ROW_COUNT,
+       coalesce(lag(ROW_COUNT,1) over(partition BY studyid
+                                      ORDER BY dataset_name), 0) AS starting_index
+FROM sas_table_metadata
+WHERE 1=1
+
+UNION ALL
+
+SELECT tablespace_name || '.' || table_name as table_name,
+       lower(studyid) AS studyid,
+       ROW_COUNT,
+       coalesce(lag(ROW_COUNT,1) over(partition BY studyid
+                                      ORDER BY dataset_name,version), 0) AS starting_index
+FROM alsc_table_metadata
+>>
+
+get_hdfs_file_path(hdfs_path, staging_tablename_without_db, staging_table_db, source_table_name_without_db)::=<<
+$hdfs_path$/$staging_table_db$.db/$staging_tablename_without_db$/$source_table_name_without_db$.csv
+>>
+
+get_csv_file_path(csv_directory, staging_tablename_without_db, staging_table_db, source_table_name_without_db)::=<<
+$csv_directory$/$staging_table_db$/$staging_tablename_without_db$/$source_table_name_without_db$.csv
+>>
+
+describe_query(table_name)::=<<
+describe $table_name$
+>>
+
+show_tables_query(db, tb)::=<<
+show tables in $db$ like '$tb$'
+>>
+
+type_map::=[
+"string":"trim_column",
+default:"default_column"
+]
+
+column_map::=[
+"subjid":"remove_padding",
+default:"trim"
+]
+
+remove_padding(column_name)::=<<
+regexp_replace($column_name$,"^0+(?!\$)","") as `$column_name$`
+>>
+
+trim(column_name)::=<<
+trim(`$column_name$`) as `$column_name$`
+>>
+
+trim_column(column_name)::=<<
+$(column_map.(column_name))(column_name)$
+>>
+
+default_column(column_name)::=<<
+`$column_name$`
+>>
+
+select_query(table_name, source_columns, column_dtype_map)::=<<
+select $source_columns:{column_name | $(type_map.(column_dtype_map.(column_name)))(column_name)$};separator=","$
+from $table_name$
+--limit 10
+>>
+
+copy_file_to_hdfs(csv_filepath, hdfs_filepath)::=<<
+hdfs dfs -copyFromLocal $csv_filepath$ $hdfs_filepath$
+>>
+
+create_unified_table(cols_types,table_name)::=<<
+create table $table_name$ ($cols_types.keys :{column_name | `$column_name$` $cols_types.(column_name)$ };separator=","$)
+stored as parquet
+>>
+
+insert_prev_unified(staging_table_name, unified_table_name, prev_unified_table_name, total_columns_list, prev_unified_ddl_map)::=<<
+insert into $unified_table_name$
+select $total_columns_list:{column_name | $if(prev_unified_ddl_map.(column_name))$ `$column_name$` $else$ null as `$column_name$` $endif$};separator=","$
+from $prev_unified_table_name$ x
+where x.ns_source_dset_studyid not in (select distinct ns_source_dset_studyid as studyid_interim from $staging_table_name$)
+>>
+
+insert_staging_unified(staging_table_name, unified_table_name, total_columns_list, staging_unified_ddl_map)::=<<
+insert into $unified_table_name$
+select $total_columns_list:{column_name | $if(staging_unified_ddl_map.(column_name))$ `$column_name$` $else$ null as `$column_name$` $endif$};separator=","$
+from $staging_table_name$
+>>
+
+insert_into_unified_old(staging_tablename,unified_tablename)::=<<
+insert into $unified_tablename$
+select * from $staging_tablename$
+>>
+
+row_count_by_fileid(table_name, file_ids)::=<<
+SELECT ns_clinical_trl_fileid AS clinical_trl_fileid,
+       count(*) AS row_count
+FROM $table_name$
+WHERE ns_clinical_trl_fileid IN ($file_ids:{file_id | $file_id$};separator=","$)
+GROUP BY ns_clinical_trl_fileid
+>>
+
+usubjid_check(unified_table_name, mapped_dataset)::=<<
+select '$mapped_dataset$' as mapped_dataset
+, studyid
+, concat(cast(usubjid as string), ' duplicated in unified table ', '$mapped_dataset$') as message
+, concat_ws(',', collect_list(ns_source_dset) over(partition by studyid, usubjid)) as dataset_name
+, 'usubjid' as var_name
+, 'SDTM' as dataset_type
+, 'ERROR' as message_level
+, '$unified_table_name$' as table_name
+from(
+select distinct studyid
+, usubjid
+, count(*) over(partition by studyid, usubjid order by studyid) as cnt
+, ns_source_dset
+from $unified_table_name$
+)x
+where cnt > 1
+>>
+
+subjid_check(unified_table_name, mapped_dataset)::=<<
+select '$mapped_dataset$' as mapped_dataset
+, studyid
+, concat(cast(subjid as string), ' duplicated in unified table ', '$mapped_dataset$') as message
+, concat_ws(',', collect_list(ns_source_dset) over(partition by studyid, usubjid)) as dataset_name
+, 'subjid' as var_name
+, 'SDTM' as dataset_type
+, 'ERROR' as message_level
+, '$unified_table_name$' as table_name
+from(
+select distinct studyid
+, subjid
+, count(*) over(partition by studyid, subjid order by studyid) as cnt
+, ns_source_dset
+from $unified_table_name$
+)x
+where cnt > 1
+>>
+
+unified_table_output(pid, target_table_name, start_ts, end_ts, validation, job_user)::=<<
+insert into clinical_prep.t_reporting_clinical_pipeline_job_output
+(pid, job_name, job_user, process_output, validation_status,  start_ts, end_ts, duration)
+values($pid$, 'unification', '$job_user$', '$target_table_name$', '$validation$','$start_ts$', '$end_ts$',
+'$end_ts$'::timestamp - '$start_ts$'::timestamp)
+>>
+
+source_table_output(pid, source_table_name,mapped_dataset_name, target_table_name, unified_status, row_count, column_count)::=<<
+insert into clinical_prep.t_reporting_source_to_unified_report
+(pid, source_table_name, mapped_dataset_name, target_table_name, unified_status, row_count, column_count)
+values($pid$, '$source_table_name$', '$mapped_dataset_name$', '$target_table_name$', '$unified_status$',
+$if(row_count)$$row_count$$else$null$endif$, $if(column_count)$$column_count$$else$null$endif$)
+>>
+
+pipeline_job_tracker(pid, job_status, job_user)::=<<
+insert into clinical_prep.t_reporting_clinical_pipeline_job_tracker(pid, job_name, job_status, job_user)
+values($pid$, 'unification' , '$job_status$', '$job_user$')
+>>
+
+pipeline_exception_tracker(pid, error_message, job_user)::=<<
+insert into clinical_prep.t_reporting_clinical_pipeline_job_errors(pid,job_name, job_user, error_message)
+values($pid$, 'unification', '$job_user$', '$error_message$')
+>>
+
+insert_checks_report(report, pid)::=<<
+insert into clinical_prep.t_reporting_unification_checks(pid, clinical_trl_fileid, table_name, studyid, dataset_name,
+dataset_type, mapped_dataset, var_name, hive_dtype, profile_dtype, config_dtype, message_level, message , comment)
+values $report:{map | $generate_value(map)$};separator=","$
+>>
+
+generate_value(map)::=<<
+($pid$, $null_integer_check(map.clinical_trl_fileid)$,
+$null_string_check(map.table_name)$, $null_string_check(map.studyid)$,
+$null_string_check(map.dataset_name)$, $null_string_check(map.dataset_type)$, $null_string_check(map.mapped_dataset)$,
+$null_string_check(map.var_name)$, $null_string_check(map.hive_dtype)$, $null_string_check(map.profile_dtype)$, $null_string_check(map.var_dtype)$,
+$null_string_check(map.message_level)$,
+$null_string_check(map.message)$, $null_string_check(map.comments)$)
+>>
+
+null_integer_check(value)::=<<
+$if(value)$$value$$else$null$endif$
+>>
+
+null_string_check(value)::=<<
+$if(value)$'$value$'$else$null$endif$
+>>
+
+batch_unified_update(batch_id, base_unified_table_name)::=<<
+update clinical_prep.clinical_batch_unified_datasets
+set valid_to_dt = current_date
+where batch_id in (select max(batch_id) from clinical_prep.clinical_batch_unified_datasets
+where base_unified_table_name = '$base_unified_table_name$')
+and base_unified_table_name = '$base_unified_table_name$'
+>>
+
+update_if_unified_in_current_batch(batch_id, base_unified_table_name)::=<<
+update clinical_prep.clinical_batch_unified_datasets
+set valid_to_ts = current_date
+where batch_id = $batch_id$
+and base_unified_table_name = '$base_unified_table_name$'
+>>
+
+batch_unified_insert(batch_id, base_dataset_name, table_version, base_unified_table_name, full_unified_table_name)::=<<
+insert into clinical_prep.clinical_batch_unified_datasets(batch_id, base_dataset_name, table_version, base_unified_table_name, full_unified_table_name, valid_from_dt, valid_to_dt)
+values ($batch_id$, '$base_dataset_name$', '$table_version$', '$base_unified_table_name$', '$full_unified_table_name$', current_date, '9999-12-31')
+>>

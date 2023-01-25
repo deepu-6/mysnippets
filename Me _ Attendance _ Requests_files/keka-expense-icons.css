@@ -1,0 +1,161 @@
+@font-face {
+    font-family: 'keka-expense-icons';
+    src: url('keka-expense-icons.eot?jbvp5v');
+    src: url('keka-expense-icons.eot?jbvp5v#iefix') format('embedded-opentype'), url('keka-expense-icons.ttf?jbvp5v') format('truetype'), url('keka-expense-icons.woff?jbvp5v') format('woff'), url('keka-expense-icons.svg?jbvp5v#keka-expense-icons') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
+[class^="keka-expense-"], [class*=" keka-expense-"] {
+  /* use !important to prevent issues with browser extensions that change fonts */
+  font-family: 'keka-expense-icons' !important;
+  speak: none;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+
+  /* Better Font Rendering =========== */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.keka-expense-money:before {
+  content: "\e900";
+}
+.keka-expense-hotel:before {
+  content: "\e901";
+}
+.keka-expense-router:before {
+  content: "\e902";
+}
+.keka-expense-cake:before {
+  content: "\e903";
+}
+.keka-expense-local-play:before {
+  content: "\e904";
+}
+.keka-expense-headset:before {
+  content: "\e905";
+}
+.keka-expense-ac-unit:before {
+  content: "\e906";
+}
+.keka-expense-attach-file:before {
+  content: "\e907";
+}
+.keka-expense-credit-card:before {
+  content: "\e908";
+}
+.keka-expense-motorcycle:before {
+  content: "\e90a";
+}
+.keka-expense-traffic:before {
+  content: "\e90b";
+}
+.keka-expense-laptop:before {
+  content: "\e90c";
+}
+.keka-expense-security:before {
+  content: "\e90d";
+}
+.keka-expense-tv:before {
+  content: "\e90e";
+}
+.keka-expense-watch:before {
+  content: "\e90f";
+}
+.keka-expense-airplane:before {
+  content: "\e910";
+}
+.keka-expense-shipping:before {
+  content: "\e911";
+}
+.keka-expense-movies:before {
+  content: "\e912";
+}
+.keka-expense-mall:before {
+  content: "\e913";
+}
+.keka-expense-library:before {
+  content: "\e914";
+}
+.keka-expense-gas-station:before {
+  content: "\e915";
+}
+.keka-expense-florist:before {
+  content: "\e916";
+}
+.keka-expense-bike:before {
+  content: "\e917";
+}
+.keka-expense-boat:before {
+  content: "\e918";
+}
+.keka-expense-bus:before {
+  content: "\e919";
+}
+.keka-expense-car:before {
+  content: "\e91a";
+}
+.keka-expense-cafe:before {
+  content: "\e91b";
+}
+.keka-expense-dining:before {
+  content: "\e91c";
+}
+.keka-expense-child-friendly:before {
+  content: "\e91d";
+}
+.keka-expense-beach-access:before {
+  content: "\e91e";
+}
+.keka-expense-airport-shuttle:before {
+  content: "\e91f";
+}
+.keka-expense-school:before {
+  content: "\e920";
+}
+.keka-expense-train:before {
+  content: "\e921";
+}
+.keka-expense-redeem:before {
+  content: "\e922";
+}
+.keka-expense-palette:before {
+  content: "\e923";
+}
+.keka-expense-style:before {
+  content: "\e924";
+}
+.keka-expense-printshop:before {
+  content: "\e925";
+}
+.keka-expense-casino:before {
+  content: "\e926";
+}
+.keka-expense-business-center:before {
+  content: "\e927";
+}
+.keka-expense-city:before {
+  content: "\e928";
+}
+.keka-expense-toys:before {
+  content: "\e929";
+}
+.keka-expense-iphone:before {
+  content: "\e92a";
+}
+.keka-expense-monetization:before {
+  content: "\e92b";
+}
+.keka-expense-move-to-inbox:before {
+  content: "\e92c";
+}
+.keka-expense-vote:before {
+  content: "\e92d";
+}
+.keka-expense-email:before {
+  content: "\e92e";
+}

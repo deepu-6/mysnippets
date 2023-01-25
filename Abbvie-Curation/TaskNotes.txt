@@ -1,0 +1,4 @@
+	*. Load CCLE nodes and rels into tellic dev. completed
+	*. Help Neha with biacore ticket - Done
+Task for the day(AbbVie): 
+	1. Help Anagani Sai teja with Neo4j smoketest scripts to run on Nabu 2.5

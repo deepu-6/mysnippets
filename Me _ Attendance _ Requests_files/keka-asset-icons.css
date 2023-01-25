@@ -1,0 +1,309 @@
+@font-face {
+    font-family: 'keka-asset-icons';
+    src: url('keka-asset-icons.eot?2k9kpl');
+    src: url('keka-asset-icons.eot?2k9kpl#iefix') format('embedded-opentype'), url('keka-asset-icons.ttf?2k9kpl') format('truetype'), url('keka-asset-icons.woff?2k9kpl') format('woff'), url('keka-asset-icons.svg?2k9kpl#keka-asset-icons') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
+[class^="keka-asset-"], [class*=" keka-asset-"] {
+    /* use !important to prevent issues with browser extensions that change fonts */
+    font-family: 'keka-asset-icons' !important;
+    speak: none;
+    font-style: normal;
+    font-weight: normal;
+    font-variant: normal;
+    text-transform: none;
+    line-height: 1;
+    /* Better Font Rendering =========== */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+.keka-asset-android-phone:before {
+    content: "\e900";
+}
+
+.keka-asset-iphone:before {
+    content: "\e901";
+}
+
+.keka-asset-smartphone:before {
+    content: "\e902";
+}
+
+.keka-asset-airline-seat-flat:before {
+    content: "\e903";
+}
+
+.keka-asset-airplanemode-active:before {
+    content: "\e904";
+}
+
+.keka-asset-airport-shuttle:before {
+    content: "\e905";
+}
+
+.keka-asset-alarm:before {
+    content: "\e906";
+}
+
+.keka-asset-android:before {
+    content: "\e907";
+}
+
+.keka-asset-assignment-ind:before {
+    content: "\e908";
+}
+
+.keka-asset-battery-charging-full:before {
+    content: "\e909";
+}
+
+.keka-asset-beach-access:before {
+    content: "\e90a";
+}
+
+.keka-asset-build:before {
+    content: "\e90b";
+}
+
+.keka-asset-business-center:before {
+    content: "\e90c";
+}
+
+.keka-asset-cafe:before {
+    content: "\e90d";
+}
+
+.keka-asset-call:before {
+    content: "\e90e";
+}
+
+.keka-asset-camera-enhance:before {
+    content: "\e90f";
+}
+
+.keka-asset-casino:before {
+    content: "\e910";
+}
+
+.keka-asset-child-friendly:before {
+    content: "\e911";
+}
+
+.keka-asset-cloud-circle:before {
+    content: "\e912";
+}
+
+.keka-asset-content-cut:before {
+    content: "\e913";
+}
+
+.keka-asset-content-paste:before {
+    content: "\e914";
+}
+
+.keka-asset-credit-card:before {
+    content: "\e915";
+}
+
+.keka-asset-desktop:before {
+    content: "\e916";
+}
+
+.keka-asset-dining:before {
+    content: "\e917";
+}
+
+.keka-asset-directions-bike:before {
+    content: "\e918";
+}
+
+.keka-asset-directions-boat:before {
+    content: "\e919";
+}
+
+.keka-asset-directions-bus:before {
+    content: "\e91a";
+}
+
+.keka-asset-directions-car:before {
+    content: "\e91b";
+}
+
+.keka-asset-drink:before {
+    content: "\e91c";
+}
+
+.keka-asset-fitness-center:before {
+    content: "\e91d";
+}
+
+.keka-asset-flag:before {
+    content: "\e91e";
+}
+
+.keka-asset-florist:before {
+    content: "\e91f";
+}
+
+.keka-asset-format-paint:before {
+    content: "\e920";
+}
+
+.keka-asset-free-breakfast:before {
+    content: "\e921";
+}
+
+.keka-asset-gas-station:before {
+    content: "\e922";
+}
+
+.keka-asset-grocery-store:before {
+    content: "\e923";
+}
+
+.keka-asset-headset-mic:before {
+    content: "\e924";
+}
+
+.keka-asset-highlight:before {
+    content: "\e925";
+}
+
+.keka-asset-insert-photo:before {
+    content: "\e926";
+}
+
+.keka-asset-keyboard:before {
+    content: "\e927";
+}
+
+.keka-asset-laptop:before {
+    content: "\e928";
+}
+
+.keka-asset-library:before {
+    content: "\e929";
+}
+
+.keka-asset-location-on:before {
+    content: "\e92a";
+}
+
+.keka-asset-mall:before {
+    content: "\e92b";
+}
+
+.keka-asset-motorcycle:before {
+    content: "\e92c";
+}
+
+.keka-asset-mouse:before {
+    content: "\e92d";
+}
+
+.keka-asset-movies:before {
+    content: "\e92e";
+}
+
+.keka-asset-print:before {
+    content: "\e92f";
+}
+
+.keka-asset-public:before {
+    content: "\e930";
+}
+
+.keka-asset-restaurant:before {
+    content: "\e931";
+}
+
+.keka-asset-room-service:before {
+    content: "\e932";
+}
+
+.keka-asset-router:before {
+    content: "\e933";
+}
+
+.keka-asset-scanner:before {
+    content: "\e934";
+}
+
+.keka-asset-school:before {
+    content: "\e935";
+}
+
+.keka-asset-sd-storage:before {
+    content: "\e936";
+}
+
+.keka-asset-security:before {
+    content: "\e937";
+}
+
+.keka-asset-see:before {
+    content: "\e938";
+}
+
+.keka-asset-settings-bluetooth:before {
+    content: "\e939";
+}
+
+.keka-asset-shipping:before {
+    content: "\e93a";
+}
+
+.keka-asset-speaker:before {
+    content: "\e93b";
+}
+
+.keka-asset-taxi:before {
+    content: "\e93c";
+}
+
+.keka-asset-touch-app:before {
+    content: "\e93d";
+}
+
+.keka-asset-toys:before {
+    content: "\e93e";
+}
+
+.keka-asset-traffic:before {
+    content: "\e93f";
+}
+
+.keka-asset-tv:before {
+    content: "\e940";
+}
+
+.keka-asset-videocam:before {
+    content: "\e941";
+}
+
+.keka-asset-volume-up:before {
+    content: "\e942";
+}
+
+.keka-asset-watch:before {
+    content: "\e943";
+}
+
+.keka-asset-weekend:before {
+    content: "\e944";
+}
+
+.keka-asset-whatshot:before {
+    content: "\e945";
+}
+
+.keka-asset-wifi:before {
+    content: "\e946";
+}
+
+.keka-asset-work:before {
+    content: "\e947";
+}

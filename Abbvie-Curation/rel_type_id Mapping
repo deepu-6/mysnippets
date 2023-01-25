@@ -1,0 +1,70 @@
+[
+  {
+    "proper_rel_type": "Has an Interaction With",
+    "rel_type_id": "E1"
+  },
+  {
+    "proper_rel_type": "Has Side Effect",
+    "rel_type_id": "E10"
+  },
+  {
+    "proper_rel_type": "Has Activity Against",
+    "rel_type_id": "E11"
+  },
+  {
+    "proper_rel_type": "Has Modulation Against",
+    "rel_type_id": "E12"
+  },
+  {
+    "proper_rel_type": "Is a Member of",
+    "rel_type_id": "E13"
+  },
+  {
+    "proper_rel_type": "Is Structurally Similar To",
+    "rel_type_id": "E14"
+  },
+  {
+    "proper_rel_type": "Has Decreasing Activity",
+    "rel_type_id": "E15"
+  },
+  {
+    "proper_rel_type": "Has Increasing Activity",
+    "rel_type_id": "E16"
+  },
+  {
+    "proper_rel_type": "Has No Effect",
+    "rel_type_id": "E17"
+  },
+  {
+    "proper_rel_type": "Has Agonism Against",
+    "rel_type_id": "E2"
+  },
+  {
+    "proper_rel_type": "Shares Pathway With",
+    "rel_type_id": "E3"
+  },
+  {
+    "proper_rel_type": "Contains",
+    "rel_type_id": "E4"
+  },
+  {
+    "proper_rel_type": "Has Antagonism Against",
+    "rel_type_id": "E5"
+  },
+  {
+    "proper_rel_type": "Increases The Effect of",
+    "rel_type_id": "E6"
+  },
+  {
+    "proper_rel_type": "Associated With",
+    "rel_type_id": "E7"
+  },
+  {
+    "proper_rel_type": "Has Modulated Side Effect",
+    "rel_type_id": "E8"
+  },
+  {
+    "proper_rel_type": "Has Induction/Activation Against",
+    "rel_type_id": "E9"
+  }
+]

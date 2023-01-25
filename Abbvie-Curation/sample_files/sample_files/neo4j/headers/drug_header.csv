@@ -1,0 +1,1 @@
+type,ontology,concept_id:ID,entity_name,class,:LABEL,molecule_type,max_phase,therapeutic_flag,first_approval,rxcui,pharmacological_action_class,moa_classes,atc_classes,targets,synonyms,run_date

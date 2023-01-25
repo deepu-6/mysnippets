@@ -1,0 +1,1 @@
+type,ontology,concept_id:ID,entity_name,class,:LABEL,synonyms,pubchem_ids,chebi_ids,rxnorm_ids,inchi_key,smiles,iupac_name

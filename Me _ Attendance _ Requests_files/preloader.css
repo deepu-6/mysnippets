@@ -1,0 +1,197 @@
+#loader {
+    position: fixed;
+    top: 44% !important;
+    left: 44% !important;
+    z-index: 9999;
+}
+
+.loading-indicator {
+    position: relative;
+}
+
+.keka-logo {
+    width: 140px;
+    height: 50px;
+}
+
+.feather {
+    animation-duration: 1.5s;
+    animation-timing-function: cubic-bezier(0, 1, 0.3, 1);
+    animation-direction: normal;
+    animation-iteration-count: infinite;
+    transform-origin: left bottom;
+    position: absolute;
+    width: 35px;
+    height: 35px;
+}
+
+    .feather.feather-one {
+        animation-name: featherOne;
+        right: -10px;
+        top: -22px;
+    }
+
+    .feather.feather-two {
+        animation-name: featherTwo;
+        right: -23px;
+        top: -21px;
+    }
+
+    .feather.feather-three {
+        animation-name: featherThree;
+        right: -37px;
+        top: -15px;
+    }
+
+    .feather.feather-four {
+        animation-name: featherFour;
+        right: -40px;
+        top: 0;
+    }
+
+#loader .content {
+    margin-top: 4px;
+}
+
+@keyframes featherOne {
+    0% {
+        opacity: 0;
+        transform: rotateZ(-65deg) scale(0.6);
+    }
+
+    9% {
+        opacity: 0;
+        transform: rotateZ(-65deg) scale(0.6);
+    }
+
+    16% {
+        opacity: 1;
+        transform: rotateZ(0) scale(1.0);
+    }
+
+    64% {
+        animation-timing-function: cubic-bezier(0, 0, 0, 1);
+    }
+
+    65% {
+        opacity: 1;
+        transform: rotateZ(0) scale(1.0);
+        animation-timing-function: cubic-bezier(0, 0, 1, 0);
+    }
+
+    73% {
+        opacity: 0;
+        transform: rotateZ(45deg) scale(0.61);
+    }
+
+    100% {
+        opacity: 0;
+        transform: rotateZ(45deg) scale(0.61);
+    }
+}
+
+@keyframes featherTwo {
+    0% {
+        opacity: 0;
+        transform: rotateZ(-65deg) scale(0.6);
+    }
+
+    6% {
+        opacity: 0;
+        transform: rotateZ(-65deg) scale(0.6);
+    }
+
+    13% {
+        opacity: 1;
+        transform: rotateZ(0) scale(1.0);
+    }
+
+    63% {
+        animation-timing-function: cubic-bezier(0, 0, 0, 1);
+    }
+
+    68% {
+        opacity: 1;
+        transform: rotateZ(0) scale(1.0);
+        animation-timing-function: cubic-bezier(0, 0, 1, 0);
+    }
+
+    76% {
+        opacity: 0;
+        transform: rotateZ(45deg) scale(0.61);
+    }
+
+    100% {
+        opacity: 0;
+        transform: rotateZ(45deg) scale(0.61);
+    }
+}
+
+@keyframes featherThree {
+    0% {
+        opacity: 0;
+        transform: rotateZ(-65deg) scale(0.6);
+    }
+
+    3% {
+        opacity: 0;
+        transform: rotateZ(-65deg) scale(0.6);
+    }
+
+    10% {
+        opacity: 1;
+        transform: rotateZ(0) scale(1.0);
+    }
+
+    60% {
+        animation-timing-function: cubic-bezier(0, 0, 0, 1);
+    }
+
+    71% {
+        opacity: 1;
+        transform: rotateZ(0) scale(1.0);
+        animation-timing-function: cubic-bezier(0, 0, 1, 0);
+    }
+
+    79% {
+        opacity: 0;
+        transform: rotateZ(45deg) scale(0.61);
+    }
+
+    100% {
+        opacity: 0;
+        transform: rotateZ(45deg) scale(0.61);
+    }
+}
+
+@keyframes featherFour {
+    0% {
+        opacity: 0;
+        transform: rotateZ(-65deg) scale(0.6);
+    }
+
+    7% {
+        opacity: 1;
+        transform: rotateZ(0) scale(1.0);
+    }
+
+    57% {
+        animation-timing-function: cubic-bezier(0, 0, 0, 1);
+    }
+
+    74% {
+        opacity: 1;
+        transform: rotateZ(0) scale(1.0);
+        animation-timing-function: cubic-bezier(0, 0, 1, 0);
+    }
+
+    83% {
+        opacity: 0;
+        transform: rotateZ(45deg) scale(0.61);
+    }
+
+    100% {
+        opacity: 0;
+        transform: rotateZ(45deg) scale(0.61);
+    }
+}
